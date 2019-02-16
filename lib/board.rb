@@ -67,13 +67,12 @@ class Board
 
     def start_game
         winner = ""
+        system("clear")
         render
+        sleep(2)
         while true
             players.each do |player|
                 player.play_hand(self)
-                render
-                sleep(2)
-                system("clear")
                 if player.won?
                     winner = player.name
                     break
@@ -81,9 +80,9 @@ class Board
             end
             break if winner != ""
         end
+        system("clear")
         render
         puts "#{winner} won! Game Over."
-        sleep(2)
         Process.exit
     end
 
@@ -100,5 +99,7 @@ def game
     board.start_game
 end
 
-#load 'lib/board.rb'
 game
+
+#load 'lib/board.rb'
+
