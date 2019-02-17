@@ -19,13 +19,13 @@ describe Pile do
 
   describe '#top_color' do
     it 'returns the top card color' do
-      expect(foundation_pile.top_color).to eq(top_card.color)
+      expect(foundation_pile.top_color).to eq("black")
     end
   end
 
   describe '#top_rank' do
     it 'returns the top card rank' do
-      expect(foundation_pile.top_rank).to eq(top_card.rank)
+      expect(foundation_pile.top_rank).to eq(13)
     end
   end
 

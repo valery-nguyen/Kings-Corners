@@ -83,6 +83,6 @@ def game
     board.start_game
 end
 
-# game
+game
 
 #load 'lib/board.rb'
