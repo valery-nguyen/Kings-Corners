@@ -1,115 +1,71 @@
 require 'player'
+require 'hand'
 
 describe Player do
+  let(:deck) { double("deck") }
+  let(:card1) { double("card") }
+  let(:card2) { double("card") }
+  let(:card3) { double("card") }
   subject(:player) do
-    Player.new("Nick the Greek")
+    allow(deck).to receive(:take).with(7).and_return([card1, card2])
+    Player.new("Valery", deck)
   end
 
   it "assigns the name" do
-    expect(player.name).to eq("Nick the Greek")
+    expect(player.name).to eq("Valery")
   end
 
-  describe "#return_cards" do
-    let(:deck) { double("deck") }
-    let(:hand) { double("hand", :return_cards => nil) }
-
-    before(:each) { player.hand = hand }
-
-    it "returns player's cards to the deck" do
-      expect(hand).to receive(:return_cards).with(deck)
-      player.return_cards(deck)
-    end
-
-    it "resets hand to nil" do
-      player.return_cards(deck)
-      expect(player.hand).to be_nil
+  describe "#play_hand" do
+    let(:board) { double("board")}
+    let(:deck) { double("deck")}
+    it "renders the board after performing a move" do
+      allow(player).to receive(:won?).and_return(false)
+      allow(player).to receive_message_chain("hand.next_move?").with(board).and_return(true, false)
+      allow(player).to receive_message_chain("hand.play").with(board)
+      allow(board).to receive(:deck).and_return(deck)
+      allow(player).to receive_message_chain("hand.hit").with(board.deck)
+      expect(board).to receive(:render)
+      player.play_hand(board)
     end
   end
 
-####### FROM BLACK JACK's DEALER SPEC
-  # describe "#play_hand" do
-  #   let(:dealer_hand) { double("hand") }
-  #   let(:deck) { double("deck") }
+  describe "#won?" do
+    it "returns true when player hand is empty" do
+      allow(player).to receive_message_chain("hand.cards.empty?").and_return(true)
+      expect(player.won?).to eq(true)
+    end
 
-  #   before do
-  #     dealer.hand = dealer_hand
-  #   end
+    it "returns false when player still has cards in hand" do
+      allow(player).to receive_message_chain("hand.cards.empty?").and_return(false)
+      expect(player.won?).to eq(false)
+    end
+  end
 
-  #   it "does not hit on seventeen" do
-  #     allow(dealer_hand).to receive_messages(
-  #       :busted? => false,
-  #       :points => 17
-  #     )
-  #     expect(dealer_hand).not_to receive(:hit)
+  describe "#update_points" do
+    let(:player1) do
+      allow(deck).to receive(:take).with(7).and_return([card1])
+      Player.new("Valery", deck)
+    end
+    let(:player2) do
+      allow(deck).to receive(:take).with(7).and_return([card1, card2])
+      Player.new("Valery", deck)
+    end
+    it "adds -10 points when a king in inside the hand" do
+      allow(card1).to receive(:rank).and_return(13)
+      expect(player1.update_points).to eq(-10)
+    end
 
-  #     dealer.play_hand(deck)
-  #   end
+    it "adds -1 points when not a king in inside the hand" do
+      allow(card1).to receive(:rank).and_return(5)
+      expect(player1.update_points).to eq(-1)
+    end
 
-  #   it "hits until seventeen acheived" do
-  #     allow(dealer_hand).to receive_messages(:busted? => false)
-
-  #     # need to use a block to give points, because we'll hit hand and
-  #     # points will change
-  #     points = 12
-  #     allow(dealer_hand).to receive(:points) do
-  #       # returns `points` defined in the outside local variable. The
-  #       # `points` variable is said to be *captured*.
-  #       points
-  #     end
-  #     expect(dealer_hand).to receive(:hit).with(deck).exactly(3).times do
-  #       # changes `points` variable above, faking addition of new
-  #       # cards.
-  #       points += 2
-  #     end
-
-  #     dealer.play_hand(deck)
-  #   end
-
-  #   it "stops when busted" do
-  #     points = 16
-  #     allow(dealer_hand).to receive(:points) { points }
-  #     allow(dealer_hand).to receive(:busted?) { points > 21 }
-
-  #     expect(dealer_hand).to receive(:hit).once.with(deck) do
-  #       points = 22
-  #     end
-
-  #     dealer.play_hand(deck)
-  #   end
-  # end
-
-  # context "with a player" do
-  #   let(:player) { double("player", :hand => player_hand) }
-  #   let(:dealer_hand) { double("dealer_hand") }
-  #   let(:player_hand) { double("player_hand") }
-
-  #   before(:each) do
-  #     dealer.hand = dealer_hand
-  #     allow(player).to receive_messages(:hand => player_hand)
-
-  #     dealer.take_bet(player, 100)
-  #   end
-
-  #   it "records bets" do
-  #     expect(dealer.bets).to eq({ player => 100 })
-  #   end
-
-  #   it "does not pay losers (or ties)" do
-  #     expect(player_hand).to receive(:beats?).with(dealer_hand).and_return(false)
-  #     expect(player).not_to receive(:pay_winnings)
-
-  #     dealer.pay_bets
-  #   end
-
-  #   it "does pay winners" do
-  #     expect(player_hand).to receive(:beats?).with(dealer_hand).and_return(true)
-
-  #     # wins twice the bet
-  #     expect(player).to receive(:pay_winnings).with(200)
-
-  #     dealer.pay_bets
-  #   end
-  # end
+    it "adds penalty for all cards inside the hand" do
+      allow(card1).to receive(:rank).and_return(13)
+      allow(card2).to receive(:rank).and_return(5)
+      expect(player2.update_points).to eq(-11)
+    end
+  end
 
 
 end

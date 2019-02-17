@@ -23,10 +23,9 @@ class Deck
   # Takes `n` cards from the top of the deck.
   def take(n)
     if n > self.count
-      puts "Deck is empty!"
-      return []
+      return [] #deck is empty
     else
-      @cards.shift(n)
+      cards.shift(n)
     end
   end
 
@@ -34,4 +33,7 @@ class Deck
   def return(cards)
     @cards += cards
   end
+
+  protected
+  attr_accessor :cards
 end

@@ -45,8 +45,10 @@ describe Deck do
     Deck.new(cards.dup)
   end
 
-  it "does not expose its cards directly" do
-    expect(deck).not_to respond_to(:cards)
+  describe "#cards" do
+    it "does not expose its cards directly" do
+      expect(deck).not_to respond_to(:cards)
+    end
   end
 
   describe "#take" do
@@ -62,9 +64,7 @@ describe Deck do
     end
 
     it "doesn't allow you to take more cards than are in the deck" do
-      expect do
-        deck.take(4)
-      end.to raise_error("not enough cards")
+      expect(deck.take(4)).to be_empty
     end
   end
 

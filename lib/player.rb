@@ -13,14 +13,7 @@ class Player
   def play_hand(board)
     until won? || hand.next_move?(board) == false
       self.hand.play(board)
-      system("clear")
       board.render
-      sleep(2)
-    end
-    if hand.next_move?(board) == false
-      system("clear")
-      board.render
-      sleep(2)
     end
 
     if !won?

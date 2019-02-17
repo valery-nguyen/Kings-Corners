@@ -13,7 +13,7 @@ class Board
         @deck = deck
         @piles = []
         @players = players
-        
+
         #foundation piles
         4.times{ @piles << Pile.new(deck.take(1)) }
         #corner piles
@@ -21,6 +21,7 @@ class Board
     end
 
     def render
+        system("clear")
         (0..3).each do |i|
             puts "Foundation pile #{i+1}:"
             sub = ""
@@ -35,19 +36,18 @@ class Board
             puts sub
         end
         puts "====="
-        players.each do |player| 
+        players.each do |player|
             puts "#{player.name}'s hand:"
             sub = ""
             player.hand.cards.each { |e| sub << e.to_s << " " }
             puts sub
         end
+        sleep(2)
     end
 
     def start_game
         winner = ""
-        system("clear")
         render
-        sleep(2)
         while true
             players.each do |player|
                 player.play_hand(self)
@@ -58,11 +58,11 @@ class Board
             end
             break if winner != ""
         end
-        system("clear")
         render
         puts "#{winner} won! Game Over."
+        puts "====="
         puts "Final points count:"
-        players.each do |player| 
+        players.each do |player|
             player.update_points
             puts "#{player.name} has #{player.points} points"
         end
@@ -83,7 +83,6 @@ def game
     board.start_game
 end
 
-game
+# game
 
 #load 'lib/board.rb'
-
