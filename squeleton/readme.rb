@@ -19,3 +19,12 @@
 # * Play a King onto an empty corner pile
 # * A player takes as many actions as they can on their turn
 # * They end their turn by drawing a card from the top of the draw deck.
+
+```
+bundle exec rspec spec/board_spec.rb
+bundle exec rspec spec/card_spec.rb
+bundle exec rspec spec/deck_spec.rb
+bundle exec rspec spec/hand_spec.rb
+bundle exec rspec spec/pile_spec.rb
+bundle exec rspec spec/player_spec.rb
+```
