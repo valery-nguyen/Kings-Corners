@@ -2,11 +2,12 @@ require "byebug"
 
 class Player
   attr_reader :name
-  attr_accessor :hand
+  attr_accessor :hand, :points
 
   def initialize(name, deck)
     @name = name
     @hand = Hand.deal_from(deck)
+    @points = 0
   end
 
   def play_hand(board)
@@ -16,6 +17,11 @@ class Player
       board.render
       sleep(2)
     end
+    if hand.next_move?(board) == false
+      system("clear")
+      board.render
+    end
+
     if !won?
       self.hand.hit(board.deck)
     end
@@ -33,4 +39,19 @@ class Player
     hand = nil
   end
 
+  def update_points
+    self.hand.cards.each do |card|
+      case card.rank
+      when 13
+        @points -= 10
+      else
+        @points -= 1
+      end
+    end
+    points
+  end
+
+  def display_points
+    puts "#{self.name} has #{self.points} points"
+  end
 end

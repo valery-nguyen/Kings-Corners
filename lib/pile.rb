@@ -69,8 +69,14 @@ class Pile
 
   # Returns true if pile can move onto another pile. Solitaire pattern must be maintained.
   def valid_move_onto?(pile)
-    self.foundation? && !self.empty? && !pile.empty? &&
+    if self.foundation? && !self.empty? && !pile.empty? &&
         (self.bottom_rank == pile.top_rank - 1) && (self.bottom_color != pile.top_color)
+        return true
+    elsif self.foundation? && !self.empty? && pile.empty? && pile.corner? && self.top_rank == 13
+      return true
+    else
+      false
+    end
   end
 
   # Plays a card on the top of the pile, objecting if it is

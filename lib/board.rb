@@ -14,32 +14,11 @@ class Board
         @piles = []
         @players = players
         
-        populate_piles(deck)
-        
-    end
-
-    def populate_piles(deck)
         #foundation piles
         kings_draw_starting = []
-        4.times do 
-            new_card = deck.take(1)
-            until new_card.first.rank != 13
-                kings_draw_starting += new_card
-                new_card = deck.take(1)
-            end
-            @piles << Pile.new(new_card)
-        end
+        4.times{ @piles << Pile.new(deck.take(1)) }
         #corner piles
         4.times{@piles << Pile.new}
-        #place kings drawn at start in corner piles
-        kings_draw_starting.each do |k|
-            (4..7).each do |i|
-                if piles[i].empty?
-                    @piles[i].play(k) 
-                    break
-                end
-            end
-        end
     end
 
     def render
@@ -73,6 +52,12 @@ class Board
         while true
             players.each do |player|
                 player.play_hand(self)
+                players.each do |p| 
+                    p.update_points
+                    p.display_points
+                end
+                sleep(2)
+                
                 if player.won?
                     winner = player.name
                     break
@@ -83,6 +68,9 @@ class Board
         system("clear")
         render
         puts "#{winner} won! Game Over."
+        puts "Final points count:"
+        players.each{ |player| puts "#{player.name} has #{player.points} points"}
+        sleep(5)
         Process.exit
     end
 
