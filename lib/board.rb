@@ -15,7 +15,6 @@ class Board
         @players = players
         
         #foundation piles
-        kings_draw_starting = []
         4.times{ @piles << Pile.new(deck.take(1)) }
         #corner piles
         4.times{@piles << Pile.new}
@@ -52,12 +51,6 @@ class Board
         while true
             players.each do |player|
                 player.play_hand(self)
-                players.each do |p| 
-                    p.update_points
-                    p.display_points
-                end
-                sleep(2)
-                
                 if player.won?
                     winner = player.name
                     break
@@ -69,7 +62,10 @@ class Board
         render
         puts "#{winner} won! Game Over."
         puts "Final points count:"
-        players.each{ |player| puts "#{player.name} has #{player.points} points"}
+        players.each do |player| 
+            player.update_points
+            puts "#{player.name} has #{player.points} points"
+        end
         sleep(5)
         Process.exit
     end

@@ -20,6 +20,7 @@ class Player
     if hand.next_move?(board) == false
       system("clear")
       board.render
+      sleep(2)
     end
 
     if !won?
@@ -54,4 +55,5 @@ class Player
   def display_points
     puts "#{self.name} has #{self.points} points"
   end
+  
 end
