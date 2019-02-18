@@ -11,18 +11,18 @@ class Hand
   def initialize(cards)
   end
 
-  def play(board)
-    # check and perform possible pile move
+  def next_move?(board)
+    # return true if there is a possible pile move
 
-    # check and perform possible card move
+    # return true if there is a possible card move
 
- 
   end
 
-  def next_move?(board)
-    # check for possible pile move
+  def play(board)
+    # check and perform pile move
 
-    # check for possible card move
+    # check and perform card move
+
 
   end
 
